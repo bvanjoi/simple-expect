@@ -1,0 +1,31 @@
+name: Test
+"on":
+  push:
+    branches:
+      - main
+    tags-ignore:
+      - "**"
+    paths-ignore:
+      - "**/*.md"
+      - LICENSE
+      - "**/*.gitignore"
+      - .editorconfig
+      - docs/**
+  pull_request: null
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          check-latest: true
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm i
+      - name: Build and test
+        run: npm run build && npm run test

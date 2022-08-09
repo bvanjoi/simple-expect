@@ -1,0 +1,34 @@
+name: Publish
+"on":
+  push:
+    branches:
+      - main
+    paths:
+      - "package.json"
+
+jobs:
+  publish:
+    name: Publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          check-latest: true
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm i
+      - name: Build and test
+        run: npm run build && npm run test
+      - name: List packages
+        run: ls -R ./npm
+        shell: bash
+      - name: Publish
+        run: |
+          echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
+          npm publish --access public
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
