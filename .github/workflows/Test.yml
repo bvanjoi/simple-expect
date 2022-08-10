@@ -24,8 +24,8 @@ jobs:
         with:
           node-version: 18
           check-latest: true
-          cache: pnpm
+          cache: yarn
       - name: Install dependencies
-        run: pnpm i
+        run: yarn
       - name: Build and test
         run: npm run build && npm run test
